@@ -1,11 +1,4 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 
 namespace GPNA.WebApiSender
 {
@@ -13,7 +6,20 @@ namespace GPNA.WebApiSender
     {
         public static void Main(string[] args)
         {
+
+            //HACK почему тут
+            //var builder = WebApplication.CreateBuilder(args);
             CreateHostBuilder(args).Build().Run();
+            //// добавляем сервисы для работы с gRPC
+            //builder.Services.AddGrpc();
+
+            //var app = builder.Build();
+
+            //// настраиваем обработку HTTP-запросов
+            //app.MapGrpcService<GreeterService>();
+            //app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client...");
+
+            //app.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

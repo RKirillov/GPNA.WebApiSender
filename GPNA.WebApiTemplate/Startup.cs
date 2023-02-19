@@ -1,7 +1,9 @@
 
 using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using GPNA.Extensions.Configurations;
 using GPNA.WebApiSender.Configuration;
+using GPNA.WebApiSender.Services;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +44,8 @@ namespace GPNA.WebApiSender
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GPNA.WebApiSender", Version = "v1.0" });
             });
             services.AddSingleton(_configuration.GetSection<JsonConfiguration>());
+            services.AddGrpc();
+            // добавляем сервисы для работы с gRPC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,12 +65,12 @@ namespace GPNA.WebApiSender
                     .AllowAnyMethod());
 
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client...");
+                endpoints.MapGrpcService<GreeterService>();
             });
 
         }

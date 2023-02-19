@@ -19,12 +19,18 @@ namespace GPNA.WebApiSender.Controllers
     public class WeatherForecastController : ControllerBase
     {
         #region Using
-        private readonly JsonConfiguration? _jsonConfiguration;
+        private readonly JsonConfiguration _jsonConfiguration;
         #endregion Using
 
+        private static readonly string[] Summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
+        private readonly ILogger<WeatherForecastController> _logger;
 
         #region Constructors
-        public WeatherForecastController(JsonConfiguration? jsonConfiguration,
+        public WeatherForecastController(JsonConfiguration jsonConfiguration,
             ILogger<WeatherForecastController> logger)
         {
             _jsonConfiguration = jsonConfiguration;
@@ -32,12 +38,7 @@ namespace GPNA.WebApiSender.Controllers
         }
         #endregion Constructors
 
-        private static readonly string[] Summaries = new[]
-    {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
-        private readonly ILogger<WeatherForecastController> _logger;
 
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
