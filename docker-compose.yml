@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  gpna.webapisender:
+    image: ${DOCKER_REGISTRY-}gpnawebapisender
+    build:
+      context: .
+      dockerfile: GPNA.WebApiTemplate/Dockerfile

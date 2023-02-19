@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPNA.WebApiSender", "GPNA.WebApiTemplate\GPNA.WebApiSender.csproj", "{6BE65176-137E-4730-A251-E38250BB3BBA}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B129EE20-8AEA-4FEA-8611-0698D0D13598}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6BE65176-137E-4730-A251-E38250BB3BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BE65176-137E-4730-A251-E38250BB3BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BE65176-137E-4730-A251-E38250BB3BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B129EE20-8AEA-4FEA-8611-0698D0D13598}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B129EE20-8AEA-4FEA-8611-0698D0D13598}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B129EE20-8AEA-4FEA-8611-0698D0D13598}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B129EE20-8AEA-4FEA-8611-0698D0D13598}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
