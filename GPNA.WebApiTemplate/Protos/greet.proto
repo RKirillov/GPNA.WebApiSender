@@ -12,7 +12,8 @@ service Greeter {
  
 // сообщение от клиента содержит name
 message HelloRequest {
-  string name = 1;
+  string Name = 1;
+  sint32 Value = 2;
 }
  
 // сообщение клиенту содержит message

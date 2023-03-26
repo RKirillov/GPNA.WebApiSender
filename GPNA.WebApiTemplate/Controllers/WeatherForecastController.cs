@@ -9,6 +9,8 @@ using System.Xml.Linq;
 using GPNA.WebApiSender.Model;
 using GPNA.WebApiSender.Configuration;
 using GPNA.WebApiSender;
+using Google.Protobuf;
+using Grpc.Net.Client;
 
 namespace GPNA.WebApiSender.Controllers
 {
@@ -19,7 +21,7 @@ namespace GPNA.WebApiSender.Controllers
     public class WeatherForecastController : ControllerBase
     {
         #region Using
-        private readonly JsonConfiguration _jsonConfiguration;
+        private readonly MessageConfiguration _jsonConfiguration;
         #endregion Using
 
         private static readonly string[] Summaries = new[]
@@ -28,13 +30,18 @@ namespace GPNA.WebApiSender.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly string _url;
+        private readonly MessageConfiguration _message;
 
         #region Constructors
-        public WeatherForecastController(JsonConfiguration jsonConfiguration,
-            ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(MessageConfiguration jsonConfiguration,
+            ILogger<WeatherForecastController> logger, IConfiguration configuration, MessageConfiguration message)
         {
             _jsonConfiguration = jsonConfiguration;
             _logger = logger;
+            _logger = logger;
+            _url = configuration[key: "Kestrel:Endpoints:gRPC:Url"];
+            _message = message;
         }
         #endregion Constructors
 
@@ -60,10 +67,18 @@ namespace GPNA.WebApiSender.Controllers
         /// <response code="200">Коллекция объектов топиков</response>
         [HttpGet("GetAll")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<SampleReport>> GetAll()
+        public async Task<ActionResult<SampleReport>> GetAllAsync()
         {
-            SampleReport sampleReport = new() { Name = _jsonConfiguration.Name, Value = _jsonConfiguration.Value };
-            return Ok(sampleReport);
+            using var channel = GrpcChannel.ForAddress(_url);
+            var client = new Greeter.GreeterClient(channel);
+
+                var reply = await client.SayHelloAsync(new HelloRequest
+                {
+                    Name = _message.Name,
+                    Value = _message.Value
+                });
+
+            return Ok(reply);
         }
         #endregion Methods
     }

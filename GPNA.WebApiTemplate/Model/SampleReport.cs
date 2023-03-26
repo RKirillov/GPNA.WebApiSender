@@ -17,6 +17,6 @@
         /// <summary>
         /// Значение
         /// </summary>
-        public double? Value { get; set; } = 1;
+        public int? Value { get; set; } = 0;
     }
 }

@@ -36,15 +36,17 @@ namespace GPNA.WebApiSender
         {
             var config = new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
             services.AddSingleton(s => config.CreateMapper());
+            var messageConfiguration = _configuration.GetSection<MessageConfiguration>();
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
+
+            services.AddSingleton(messageConfiguration);
+            services.AddGrpc();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GPNA.WebApiSender", Version = "v1.0" });
             });
-            services.AddSingleton(_configuration.GetSection<JsonConfiguration>());
-            services.AddGrpc();
             // добавляем сервисы для работы с gRPC
         }
 
@@ -68,9 +70,10 @@ namespace GPNA.WebApiSender
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client...");
+                
+                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client...");});
                 endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapControllers();
             });
 
         }
