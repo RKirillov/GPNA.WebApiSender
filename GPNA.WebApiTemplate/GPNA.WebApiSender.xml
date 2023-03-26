@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GPNA.WebApiSender</name>
+    </assembly>
+    <members>
+        <member name="T:GPNA.WebApiSender.Configuration.MessageConfiguration">
+            <summary>
+            Конфигурация передаваемого сообщения
+            </summary>
+        </member>
+        <member name="P:GPNA.WebApiSender.Configuration.MessageConfiguration.Name">
+            <summary>
+            Имя
+            </summary>
+        </member>
+        <member name="P:GPNA.WebApiSender.Configuration.MessageConfiguration.Value">
+            <summary>
+            Год
+            </summary>
+        </member>
+        <member name="M:GPNA.WebApiSender.Controllers.WeatherForecastController.GetAllAsync">
+            <summary>
+            Получить все топики
+            </summary>
+            <response code="200">Коллекция объектов топиков</response>
+        </member>
+        <member name="T:GPNA.WebApiSender.Model.SampleReport">
+            <summary>
+            Регистр отчетов
+            </summary>
+        </member>
+        <member name="P:GPNA.WebApiSender.Model.SampleReport.Name">
+            <summary>
+            Наименование параметра
+            </summary>
+        </member>
+        <member name="P:GPNA.WebApiSender.Model.SampleReport.Value">
+            <summary>
+            Значение
+            </summary>
+        </member>
+        <member name="T:GPNA.WebApiSender.GreetReflection">
+            <summary>Holder for reflection information generated from Protos/greet.proto</summary>
+        </member>
+        <member name="P:GPNA.WebApiSender.GreetReflection.Descriptor">
+            <summary>File descriptor for Protos/greet.proto</summary>
+        </member>
+        <member name="T:GPNA.WebApiSender.HelloRequest">
+            <summary>
+            сообщение от клиента содержит name
+            </summary>
+        </member>
+        <member name="F:GPNA.WebApiSender.HelloRequest.NameFieldNumber">
+            <summary>Field number for the "Name" field.</summary>
+        </member>
+        <member name="F:GPNA.WebApiSender.HelloRequest.ValueFieldNumber">
+            <summary>Field number for the "Value" field.</summary>
+        </member>
+        <member name="T:GPNA.WebApiSender.HelloReply">
+            <summary>
+            сообщение клиенту содержит message
+            </summary>
+        </member>
+        <member name="F:GPNA.WebApiSender.HelloReply.MessageFieldNumber">
+            <summary>Field number for the "message" field.</summary>
+        </member>
+        <member name="T:GPNA.WebApiSender.Greeter">
+            <summary>
+            определение сервиса
+            </summary>
+        </member>
+        <member name="P:GPNA.WebApiSender.Greeter.Descriptor">
+            <summary>Service descriptor</summary>
+        </member>
+        <member name="T:GPNA.WebApiSender.Greeter.GreeterBase">
+            <summary>Base class for server-side implementations of Greeter</summary>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterBase.SayHello(GPNA.WebApiSender.HelloRequest,Grpc.Core.ServerCallContext)">
+            <summary>
+            отправка сообщения
+            </summary>
+            <param name="request">The request received from the client.</param>
+            <param name="context">The context of the server-side call handler being invoked.</param>
+            <returns>The response to send back to the client (wrapped by a task).</returns>
+        </member>
+        <member name="T:GPNA.WebApiSender.Greeter.GreeterClient">
+            <summary>Client for Greeter</summary>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.#ctor(Grpc.Core.ChannelBase)">
+            <summary>Creates a new client for Greeter</summary>
+            <param name="channel">The channel to use to make remote calls.</param>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.#ctor(Grpc.Core.CallInvoker)">
+            <summary>Creates a new client for Greeter that uses a custom <c>CallInvoker</c>.</summary>
+            <param name="callInvoker">The callInvoker to use to make remote calls.</param>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.#ctor">
+            <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.#ctor(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Protected constructor to allow creation of configured clients.</summary>
+            <param name="configuration">The client configuration.</param>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.SayHello(GPNA.WebApiSender.HelloRequest,Grpc.Core.Metadata,System.Nullable{System.DateTime},System.Threading.CancellationToken)">
+            <summary>
+            отправка сообщения
+            </summary>
+            <param name="request">The request to send to the server.</param>
+            <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+            <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+            <param name="cancellationToken">An optional token for canceling the call.</param>
+            <returns>The response received from the server.</returns>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.SayHello(GPNA.WebApiSender.HelloRequest,Grpc.Core.CallOptions)">
+            <summary>
+            отправка сообщения
+            </summary>
+            <param name="request">The request to send to the server.</param>
+            <param name="options">The options for the call.</param>
+            <returns>The response received from the server.</returns>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.SayHelloAsync(GPNA.WebApiSender.HelloRequest,Grpc.Core.Metadata,System.Nullable{System.DateTime},System.Threading.CancellationToken)">
+            <summary>
+            отправка сообщения
+            </summary>
+            <param name="request">The request to send to the server.</param>
+            <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+            <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+            <param name="cancellationToken">An optional token for canceling the call.</param>
+            <returns>The call object.</returns>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.SayHelloAsync(GPNA.WebApiSender.HelloRequest,Grpc.Core.CallOptions)">
+            <summary>
+            отправка сообщения
+            </summary>
+            <param name="request">The request to send to the server.</param>
+            <param name="options">The options for the call.</param>
+            <returns>The call object.</returns>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.GreeterClient.NewInstance(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.BindService(GPNA.WebApiSender.Greeter.GreeterBase)">
+            <summary>Creates service definition that can be registered with a server</summary>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+        <member name="M:GPNA.WebApiSender.Greeter.BindService(Grpc.Core.ServiceBinderBase,GPNA.WebApiSender.Greeter.GreeterBase)">
+            <summary>Register service method with a service binder with or without implementation. Useful when customizing the service binding logic.
+            Note: this method is part of an experimental API that can change or be removed without any prior notice.</summary>
+            <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+    </members>
+</doc>

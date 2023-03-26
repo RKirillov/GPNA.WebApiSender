@@ -32,13 +32,13 @@ namespace GPNA.WebApiSender
                     webBuilder.UseKestrel()
                         .UseConfiguration(Configuration)
                         .UseStaticWebAssets()
-                        .UseStartup<Startup>()
-                        .ConfigureLogging(logging =>
+                        .UseStartup<Startup>();
+      /*                  .ConfigureLogging(logging =>
                         {
                             logging.ClearProviders();
-                            logging.SetMinimumLevel(LogLevel.Trace);
+                            logging.SetMinimumLevel(LogLevel.Information);
                         })
-                        .UseNLog();
+                        .UseNLog();*/
                 })
                 .ConfigureServices(svc =>
                 {
