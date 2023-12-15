@@ -11,7 +11,6 @@
 	  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	  <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <ImplicitUsings>enable</ImplicitUsings>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,5 +36,11 @@
   <ItemGroup>
     <Folder Include="ModelDto\" />
     <Protobuf Include="Protos\greet.proto" GrpcServices="Server,Client" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="GPNA.WebApiSender.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

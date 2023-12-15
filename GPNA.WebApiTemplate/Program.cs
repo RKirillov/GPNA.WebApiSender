@@ -1,12 +1,6 @@
-using Google.Protobuf.WellKnownTypes;
+
 using NLog.Web;
-using System.Reflection.Metadata;
-using static GPNA.WebApiSender.Services.ClientService;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
+using GPNA.WebApiSender.Services;
 
 namespace GPNA.WebApiSender
 {
@@ -42,7 +36,7 @@ namespace GPNA.WebApiSender
                 })
                 .ConfigureServices(svc =>
                 {
-                    svc.AddHostedService<Client>();
+                    svc.AddHostedService<ClientService>();
                 });
     }
 }

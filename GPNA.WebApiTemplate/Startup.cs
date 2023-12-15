@@ -1,19 +1,10 @@
 
 using AutoMapper;
-using Google.Protobuf.WellKnownTypes;
 using GPNA.Extensions.Configurations;
 using GPNA.WebApiSender.Configuration;
 using GPNA.WebApiSender.Services;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Reflection;
 
 namespace GPNA.WebApiSender

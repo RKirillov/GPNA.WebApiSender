@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using GPNA.WebApiSender;
 
 namespace GPNA.WebApiSender.Services;
 
