@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace GPNA.WebApiSender.Services;
 
@@ -8,16 +9,23 @@ namespace GPNA.WebApiSender.Services;
 public class Greeter1Service : GreeterUnary.GreeterUnaryBase
 {
     private readonly ILogger<Greeter1Service> _logger;
+    string[] messages = { "Привет", "Как дела?", "Че молчишь?", "Ты че, спишь?", "Ну пока" };
     public Greeter1Service(ILogger<Greeter1Service> logger)
     {
         _logger = logger;
     }
     //ообщение от клиента в виде объекта request. 
-    public override Task<HelloReply> SayHello1(HelloRequest request, ServerCallContext context)
+    public override async Task SayHello1(HelloRequest request, IServerStreamWriter<HelloReply> responseStream, ServerCallContext context)
     {
-        return Task.FromResult(new HelloReply
+        foreach (var message in messages)
         {
-            Message = $"Hello {request.Name} {request.Value}"
-        });
+            //Потоковая передача сервера завершается, когда происходит выход из метода.
+            await responseStream.WriteAsync(new HelloReply
+            {            
+                Message = $"{message} {request.Name} {request.Value}"
+            });
+            // для имитации работы делаем задержку в 1 секунду
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
     }
 }

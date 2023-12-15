@@ -8,7 +8,7 @@ package greet;
 service GreeterUnary {
   // который получает сообщение HelloRequest
   // и отправляет сообщение HelloReply
-  rpc SayHello1 (HelloRequest) returns (HelloReply);
+  rpc SayHello1 (HelloRequest) returns (stream HelloReply);
 }
  
 // То есть это те данные, которые мы получаем от клиента

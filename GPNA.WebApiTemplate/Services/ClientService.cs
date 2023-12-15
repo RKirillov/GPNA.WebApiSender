@@ -1,11 +1,6 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿
 using GPNA.WebApiSender.Configuration;
 using Grpc.Net.Client;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace GPNA.WebApiSender.Services
 {
@@ -24,15 +19,27 @@ namespace GPNA.WebApiSender.Services
         {
             using var channel = GrpcChannel.ForAddress(_url);
             var client = new GreeterUnary.GreeterUnaryClient(channel);
+
+            // посылаем пустое сообщение и получаем набор сообщений
+            var serverData = client.SayHello1(new HelloRequest
+            {
+                Name = _message.Name,
+                Value = _message.Value
+            }); 
+
+            // получаем поток сервера
+            var responseStream = serverData.ResponseStream;
+
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                var reply = await client.SayHello1Async(new HelloRequest
+                // с помощью итераторов извлекаем каждое сообщение из потока
+                while (await responseStream.MoveNext(stoppingToken))
                 {
-                    Name = _message.Name,
-                    Value = _message.Value
-                });
-                _logger.LogInformation($"Greeting: {reply.Message} -- {DateTime.Now}");
-                await Task.Delay(1000, stoppingToken);
+                    HelloReply response = responseStream.Current;
+                    _logger.LogInformation($"Greeting: {response.Message} -- {DateTime.Now}");
+                    await Task.Delay(1000, stoppingToken);
+                }
             }
         }
     }
