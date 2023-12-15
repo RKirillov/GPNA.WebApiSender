@@ -17,15 +17,18 @@ public class Greeter1Service : GreeterUnary.GreeterUnaryBase
     //ообщение от клиента в виде объекта request. 
     public override async Task SayHello1(HelloRequest request, IServerStreamWriter<HelloReply> responseStream, ServerCallContext context)
     {
-        foreach (var message in messages)
+        while (true)
         {
-            //Потоковая передача сервера завершается, когда происходит выход из метода.
-            await responseStream.WriteAsync(new HelloReply
-            {            
-                Message = $"{message} {request.Name} {request.Value}"
-            });
-            // для имитации работы делаем задержку в 1 секунду
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            foreach (var message in messages)
+            {
+                //Потоковая передача сервера завершается, когда происходит выход из метода.
+                await responseStream.WriteAsync(new HelloReply
+                {
+                    Message = $"{message} {request.Name} {request.Value}"
+                });
+                // для имитации работы делаем задержку в 1 секунду
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
         }
     }
 }
