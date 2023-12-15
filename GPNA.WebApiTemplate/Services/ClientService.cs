@@ -23,7 +23,7 @@ namespace GPNA.WebApiSender.Services
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var channel = GrpcChannel.ForAddress(_url);
-            var client = new GreeterRoman.GreeterRomanClient(channel);
+            var client = new GreeterUnary.GreeterUnaryClient(channel);
             while (!stoppingToken.IsCancellationRequested)
             {
                 var reply = await client.SayHello1Async(new HelloRequest
