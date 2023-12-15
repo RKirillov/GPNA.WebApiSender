@@ -4,15 +4,16 @@ namespace GPNA.WebApiSender.Services;
 
 //Greeter.GreeterBase - абстрактный класс, который автоматически генерируется
 //по определению сервиса greeter в файле greeter.proto
-public class GreeterService : Greeter.GreeterBase
+//это сервис (сервер)
+public class Greeter1Service : GreeterServer.GreeterRomanBase
 {
-    private readonly ILogger<GreeterService> _logger;
-    public GreeterService(ILogger<GreeterService> logger)
+    private readonly ILogger<Greeter1Service> _logger;
+    public Greeter1Service(ILogger<Greeter1Service> logger)
     {
         _logger = logger;
     }
-
-    public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+    //ообщение от клиента в виде объекта request. 
+    public override Task<HelloReply> SayHello1(HelloRequest request, ServerCallContext context)
     {
         return Task.FromResult(new HelloReply
         {

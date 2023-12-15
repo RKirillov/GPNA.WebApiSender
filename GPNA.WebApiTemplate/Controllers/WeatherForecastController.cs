@@ -70,9 +70,9 @@ namespace GPNA.WebApiSender.Controllers
         public async Task<ActionResult<SampleReport>> GetAllAsync()
         {
             using var channel = GrpcChannel.ForAddress(_url);
-            var client = new Greeter.GreeterClient(channel);
+            var client = new GreeterServer.GreeterRomanClient(channel);
 
-                var reply = await client.SayHelloAsync(new HelloRequest
+                var reply = await client.SayHello1Async(new HelloRequest
                 {
                     Name = _message.Name,
                     Value = _message.Value
