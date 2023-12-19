@@ -23,6 +23,7 @@ namespace GPNA.WebApiSender.Services
             // создаем клиент
             var client = new GreeterServerSream.GreeterServerSreamClient(channel);
 
+            var call = client.ClientDataStream();
             // посылаем  сообщение HelloRequest серверу
             var serverData = client.SayHello1(new HelloRequest
             {

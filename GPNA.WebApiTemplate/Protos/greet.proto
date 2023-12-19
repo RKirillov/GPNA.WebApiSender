@@ -9,7 +9,7 @@ service GreeterServerSream {
   // который получает сообщение HelloRequest
   // и отправляет сообщение HelloReply
   //контракт на коммуникации
-  rpc SayHello1 (HelloRequest) returns (stream HelloReply);
+  rpc SayHello1 (stream HelloRequest) returns ( HelloReply);
 }
  
 // То есть это те данные, которые мы получаем от клиента
