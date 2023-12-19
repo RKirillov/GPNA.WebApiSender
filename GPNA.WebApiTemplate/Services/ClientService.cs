@@ -10,7 +10,7 @@ namespace GPNA.WebApiSender.Services
         private readonly ILogger<ClientService> _logger;
         private readonly string _url;
         private readonly MessageConfiguration _message;
-        string[] messages = { "Вася", "Шварц", "Анна" };
+        string[] messages = { "Вася", "Шварц", "Анна", "Сучка" };
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration, MessageConfiguration message)
         {
             _logger = logger;
@@ -33,7 +33,12 @@ namespace GPNA.WebApiSender.Services
             {
                 await serverData.RequestStream.WriteAsync(new HelloRequest { Name = message , Value= _message.Value});
             }
+            // завершаем отправку сообшений в потоке
+            await serverData.RequestStream.CompleteAsync();
 
+            // получаем ответ сервера
+            var response = await serverData.ResponseAsync;
+            Console.WriteLine($"Ответ сервера: {response.Message}");
             // получаем поток сервера
             /*            var responseStream = serverData.ResponseStream;
 
