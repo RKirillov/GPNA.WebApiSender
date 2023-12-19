@@ -12,15 +12,18 @@ namespace GPNA.WebApiSender.Services
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration, MessageConfiguration message)
         {
             _logger = logger;
-            _url = configuration[key: "Kestrel:Endpoints:gRPC:Url"];
+            _url = configuration[key: "Kestrel:Endpoints:gRPC:Url"]??string.Empty;
             _message = message;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            // создаем канал для обмена сообщениями с сервером
+            // параметр - адрес сервера gRPC
             using var channel = GrpcChannel.ForAddress(_url);
+            // создаем клиент
             var client = new GreeterUnary.GreeterUnaryClient(channel);
 
-            // посылаем пустое сообщение и получаем набор сообщений
+            // посылаем  сообщение HelloRequest серверу
             var serverData = client.SayHello1(new HelloRequest
             {
                 Name = _message.Name,
@@ -33,11 +36,12 @@ namespace GPNA.WebApiSender.Services
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                // с помощью итераторов извлекаем каждое сообщение из потока
+                //Для считывания данных из потока можно использовать разные стратегии. 
+                // здесь с помощью итераторов извлекаем каждое сообщение из потока
                 while (await responseStream.MoveNext(stoppingToken))
                 {
                     HelloReply response = responseStream.Current;
-                    _logger.LogInformation($"Greeting: {response.Message} -- {DateTime.Now}");
+                    _logger.LogInformation($"Ответ сервера: {response.Message} -- {DateTime.Now}");
                     await Task.Delay(1000, stoppingToken);
                 }
             }

@@ -6,11 +6,11 @@ namespace GPNA.WebApiSender.Services;
 //Greeter.GreeterBase - абстрактный класс, который автоматически генерируется
 //по определению сервиса greeter в файле greeter.proto
 //это сервис (сервер)
-public class Greeter1Service : GreeterUnary.GreeterUnaryBase
+public class ServerGreeterService : GreeterUnary.GreeterUnaryBase
 {
-    private readonly ILogger<Greeter1Service> _logger;
+    private readonly ILogger<ServerGreeterService> _logger;
     string[] messages = { "Привет", "Как дела?", "Че молчишь?", "Ты че, спишь?", "Ну пока" };
-    public Greeter1Service(ILogger<Greeter1Service> logger)
+    public ServerGreeterService(ILogger<ServerGreeterService> logger)
     {
         _logger = logger;
     }
