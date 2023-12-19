@@ -21,7 +21,7 @@ namespace GPNA.WebApiSender.Services
             // параметр - адрес сервера gRPC
             using var channel = GrpcChannel.ForAddress(_url);
             // создаем клиент
-            var client = new GreeterServerSream.GreeterServerSreamClient(channel);
+            var client = new GreeterServerStream.GreeterServerStreamClient(channel);
 
             // посылаем  сообщение HelloRequest серверу
             var serverData = client.SayHello1(new HelloRequest
