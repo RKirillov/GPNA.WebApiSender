@@ -5,7 +5,7 @@ option csharp_namespace = "GPNA.WebApiSender";
 package greet;
  
 // определение сервиса -сервера  кто отвечает клиенту
-service GreeterServerSream {
+service GreeterGrpc {
   // который получает сообщение HelloRequest
   // и отправляет сообщение HelloReply
   //контракт на коммуникации

@@ -10,7 +10,7 @@ namespace GPNA.WebApiSender.Services
         private readonly ILogger<ClientService> _logger;
         private readonly string _url;
         private readonly MessageConfiguration _message;
-        string[] messages = { "Вася", "Шварц", "Анна", "Лена", "Петя" };
+        string[] messages = { "Вася", "Шварц", "Анна" };
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration, MessageConfiguration message)
         {
             _logger = logger;
@@ -23,7 +23,7 @@ namespace GPNA.WebApiSender.Services
             // параметр - адрес сервера gRPC
             using var channel = GrpcChannel.ForAddress(_url);
             // создаем клиент
-            var client = new GreeterServerSream.GreeterServerSreamClient(channel);
+            var client = new GreeterGrpc.GreeterGrpcClient(channel);
 
             // посылаем  сообщение HelloRequest серверу
             var serverData = client.SayHello1();
