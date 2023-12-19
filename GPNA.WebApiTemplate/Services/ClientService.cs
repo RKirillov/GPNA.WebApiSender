@@ -1,6 +1,7 @@
 ﻿
 using GPNA.WebApiSender.Configuration;
 using Grpc.Net.Client;
+using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace GPNA.WebApiSender.Services
 {
@@ -9,6 +10,7 @@ namespace GPNA.WebApiSender.Services
         private readonly ILogger<ClientService> _logger;
         private readonly string _url;
         private readonly MessageConfiguration _message;
+        string[] messages = { "Вася", "Шварц", "Анна", "Лена", "Петя" };
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration, MessageConfiguration message)
         {
             _logger = logger;
@@ -23,29 +25,30 @@ namespace GPNA.WebApiSender.Services
             // создаем клиент
             var client = new GreeterServerSream.GreeterServerSreamClient(channel);
 
-            var call = client.ClientDataStream();
             // посылаем  сообщение HelloRequest серверу
-            var serverData = client.SayHello1(new HelloRequest
+            var serverData = client.SayHello1();
+
+            // посылаем каждое сообщение
+            foreach (var message in messages)
             {
-                Name = _message.Name,
-                Value = _message.Value
-            }); 
+                await serverData.RequestStream.WriteAsync(new HelloRequest { Name = message , Value= _message.Value});
+            }
 
             // получаем поток сервера
-            var responseStream = serverData.ResponseStream;
+            /*            var responseStream = serverData.ResponseStream;
 
 
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                //Для считывания данных из потока можно использовать разные стратегии. 
-                // здесь с помощью итераторов извлекаем каждое сообщение из потока
-                while (await responseStream.MoveNext(stoppingToken))
-                {
-                    HelloReply response = responseStream.Current;
-                    _logger.LogInformation($"Ответ сервера: {response.Message} -- {DateTime.Now}");
-                    await Task.Delay(1000, stoppingToken);
-                }
-            }
+                        while (!stoppingToken.IsCancellationRequested)
+                        {
+                            //Для считывания данных из потока можно использовать разные стратегии. 
+                            // здесь с помощью итераторов извлекаем каждое сообщение из потока
+                            while (await responseStream.MoveNext(stoppingToken))
+                            {
+                                HelloReply response = responseStream.Current;
+                                _logger.LogInformation($"Ответ сервера: {response.Message} -- {DateTime.Now}");
+                                await Task.Delay(1000, stoppingToken);
+                            }
+                        }*/
         }
     }
 }
