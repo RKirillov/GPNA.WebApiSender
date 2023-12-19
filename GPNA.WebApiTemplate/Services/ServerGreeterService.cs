@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace GPNA.WebApiSender.Services;
 
@@ -9,26 +8,49 @@ namespace GPNA.WebApiSender.Services;
 public class ServerGreeterService : GreeterServerStream.GreeterServerStreamBase
 {
     private readonly ILogger<ServerGreeterService> _logger;
-    string[] messages = { "Привет", "Как дела?", "Че молчишь?", "Ты че, спишь?", "Ну пока" };
+    string[] _messages = { "Привет", "Как дела?", "Че молчишь?", "Ты че, спишь?", "Ну пока" };
     public ServerGreeterService(ILogger<ServerGreeterService> logger)
     {
         _logger = logger;
     }
     //ообщение от клиента в виде объекта request. 
-    public override async Task SayHello1(HelloRequest request, IServerStreamWriter<HelloReply> responseStream, ServerCallContext context)
+    public override async Task SayHello1(IAsyncStreamReader<HelloRequest> requestStream, IServerStreamWriter<HelloReply> responseStream, ServerCallContext context)
     {
-        while (true)
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken token = cancellationTokenSource.Token;
+        while (!token.IsCancellationRequested)
         {
-            foreach (var message in messages)
+            // считываем входящие сообщения в фоновой задаче
+            var readTask = Task.Run(async () =>
             {
-                //Потоковая передача сервера завершается, когда происходит выход из метода.
-                await responseStream.WriteAsync(new HelloReply
+                await foreach (var helloRequest in requestStream.ReadAllAsync())
                 {
-                    Message = $"{message} {request.Name} {request.Value}"
-                });
-                // для имитации работы делаем задержку в 1 секунду
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                    _logger.LogInformation($"Client: {helloRequest.Name} {helloRequest.Value}");
+                }
+            });
+
+
+            foreach (var message in _messages)
+            {
+                // Посылаем ответ, пока клиент не закроет поток
+                if (!readTask.IsCompleted)
+                {
+                    await responseStream.WriteAsync(new HelloReply { Message = message });
+                    //_logger.LogInformation(message);
+                    await Task.Delay(2000);
+                }
             }
+            await readTask; // ожидаем завершения задачи чтения
+            /*            foreach (var message in messages)
+                        {
+                            //Потоковая передача сервера завершается, когда происходит выход из метода.
+                            await responseStream.WriteAsync(new HelloReply
+                            {
+                                Message = $"{message} {request.Name} {request.Value}"
+                            });
+                            // для имитации работы делаем задержку в 1 секунду
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }*/
         }
     }
 }

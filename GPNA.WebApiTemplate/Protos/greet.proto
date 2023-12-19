@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
  
 option csharp_namespace = "GPNA.WebApiSender";
- 
+//определяем название пакета,чтобы небыло конфликтов
 package greet;
  
 // определение сервиса -сервера  кто отвечает клиенту
@@ -9,7 +9,7 @@ service GreeterServerStream {
   // который получает сообщение HelloRequest
   // и отправляет сообщение HelloReply
   //контракт на коммуникации
-  rpc SayHello1 (HelloRequest) returns (stream HelloReply);
+  rpc SayHello1 (stream HelloRequest) returns (stream HelloReply);
 }
  
 // То есть это те данные, которые мы получаем от клиента
