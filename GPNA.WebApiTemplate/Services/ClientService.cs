@@ -1,5 +1,5 @@
-﻿
-using GPNA.WebApiSender.Configuration;
+﻿using GPNA.WebApiSender.Configuration;
+using Grpc.Core;
 using Grpc.Net.Client;
 
 namespace GPNA.WebApiSender.Services
@@ -9,6 +9,7 @@ namespace GPNA.WebApiSender.Services
         private readonly ILogger<ClientService> _logger;
         private readonly string _url;
         private readonly MessageConfiguration _message;
+        string[] _messages = { "Вася", "Шварц", "Анна", "Сучка", "Google" };
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration, MessageConfiguration message)
         {
             _logger = logger;
@@ -21,29 +22,37 @@ namespace GPNA.WebApiSender.Services
             // параметр - адрес сервера gRPC
             using var channel = GrpcChannel.ForAddress(_url);
             // создаем клиент
-            var client = new GreeterServerStream.GreeterServerStreamClient(channel);
+            var client = new GreeterGrpc.GreeterGrpcClient(channel);
 
             // посылаем  сообщение HelloRequest серверу
-            var serverData = client.SayHello1(new HelloRequest
-            {
-                Name = _message.Name,
-                Value = _message.Value
-            }); 
+            var serverData = client.SayHello1();
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
 
-
+            Task readTask;
             while (!stoppingToken.IsCancellationRequested)
             {
-                //Для считывания данных из потока можно использовать разные стратегии. 
-                // здесь с помощью итераторов извлекаем каждое сообщение из потока
-                while (await responseStream.MoveNext(stoppingToken))
+
+
+                readTask = Task.Run(async () =>
                 {
-                    HelloReply response = responseStream.Current;
-                    _logger.LogInformation($"Ответ сервера: {response.Message} -- {DateTime.Now}");
-                    await Task.Delay(1000, stoppingToken);
+                    await foreach (var response in serverData.ResponseStream.ReadAllAsync())
+                    {
+                        _logger.LogInformation($"Server: {response.Message}");
+                    }
+                });
+
+                // посылаем каждое сообщение
+                foreach (var message in _messages)
+                {
+                    await serverData.RequestStream.WriteAsync(new HelloRequest { Name = message, Value = _message.Value });
+                    await Task.Delay(2000);
                 }
+
+                // завершаем отправку сообщений на сервер
+                await serverData.RequestStream.CompleteAsync();
+                await readTask;
             }
         }
     }

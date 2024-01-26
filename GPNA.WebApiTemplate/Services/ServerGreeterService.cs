@@ -5,7 +5,7 @@ namespace GPNA.WebApiSender.Services;
 //Greeter.GreeterBase - абстрактный класс, который автоматически генерируется
 //по определению сервиса greeter в файле greeter.proto
 //это сервис (сервер)
-public class ServerGreeterService : GreeterServerStream.GreeterServerStreamBase
+public class ServerGreeterService : GreeterGrpc.GreeterGrpcBase
 {
     private readonly ILogger<ServerGreeterService> _logger;
     string[] _messages = { "Привет", "Как дела?", "Че молчишь?", "Ты че, спишь?", "Ну пока" };
@@ -18,14 +18,14 @@ public class ServerGreeterService : GreeterServerStream.GreeterServerStreamBase
     {
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = cancellationTokenSource.Token;
-        while (!token.IsCancellationRequested)
-        {
+        //while (context.)
+        //{
             // считываем входящие сообщения в фоновой задаче
             var readTask = Task.Run(async () =>
             {
                 await foreach (var helloRequest in requestStream.ReadAllAsync())
                 {
-                    _logger.LogInformation($"Client: {helloRequest.Name} {helloRequest.Value}");
+                    _logger.LogInformation($"Client: {helloRequest.Name}");
                 }
             });
 
@@ -51,6 +51,6 @@ public class ServerGreeterService : GreeterServerStream.GreeterServerStreamBase
                             // для имитации работы делаем задержку в 1 секунду
                             await Task.Delay(TimeSpan.FromSeconds(1));
                         }*/
-        }
+        //}
     }
 }
