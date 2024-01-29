@@ -33,7 +33,7 @@ namespace GPNA.WebApiSender
             services.AddControllers();
 
             services.AddSingleton(messageConfiguration);
-            services.AddGrpc().AddJsonTranscoding();
+            services.AddGrpc();//.AddJsonTranscoding();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
@@ -55,7 +55,7 @@ namespace GPNA.WebApiSender
 
                 var filePath = Path.Combine(AppContext.BaseDirectory, "GPNA.WebApiSender.xml");
                 c.IncludeXmlComments(filePath);
-                c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
+                //c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
             });
             // добавляем сервисы для работы с gRPC
         }
