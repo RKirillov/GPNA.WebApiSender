@@ -8,7 +8,8 @@ namespace GPNA.WebApiSender.Services;
 public class ServerGreeterService : GreeterGrpc.GreeterGrpcBase
 {
     private readonly ILogger<ServerGreeterService> _logger;
-    string[] _messages = { "Привет", "Как дела?", "Че молчишь?", "Ты че, спишь?", "Ну пока" };
+    string[] _messages = { "Привет", "Как дела?" };
+    //string[] _messages = { "Привет", "Как дела?", "Че молчишь?", "Ты че, спишь?", "Ну пока" };
     public ServerGreeterService(ILogger<ServerGreeterService> logger)
     {
         _logger = logger;
@@ -18,39 +19,36 @@ public class ServerGreeterService : GreeterGrpc.GreeterGrpcBase
     {
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         CancellationToken token = cancellationTokenSource.Token;
-        //while (context.)
-        //{
-            // считываем входящие сообщения в фоновой задаче
-            var readTask = Task.Run(async () =>
-            {
-                await foreach (var helloRequest in requestStream.ReadAllAsync())
-                {
-                    _logger.LogInformation($"Client: {helloRequest.Name}");
-                }
-            });
+        //!context.CancellationToken.IsCancellationRequested
 
-
-            foreach (var message in _messages)
+        // считываем входящие сообщения в фоновой задаче
+        var readTask = Task.Run(async () =>
+        {
+            await foreach (var helloRequest in requestStream.ReadAllAsync(context.CancellationToken))
             {
-                // Посылаем ответ, пока клиент не закроет поток
-                if (!readTask.IsCompleted)
+                _logger.LogInformation($"Client: {helloRequest.Name}");
+            }
+        });
+        //!readTask.IsCompleted
+        //!context.CancellationToken.IsCancellationRequested
+        var i = 0;//имитация передачи тегов
+        while (!context.CancellationToken.IsCancellationRequested && i<10)
+        {
+            i++;
+            try
+            {
+                foreach (var message in _messages)
                 {
-                    await responseStream.WriteAsync(new HelloReply { Message = message });
-                    //_logger.LogInformation(message);
-                    await Task.Delay(2000);
+                    await responseStream.WriteAsync(new HelloReply { Message = message }, context.CancellationToken);
+                    _logger.LogInformation(i.ToString());
+                    await Task.Delay(TimeSpan.FromSeconds(1), context.CancellationToken);
                 }
             }
-            await readTask; // ожидаем завершения задачи чтения
-            /*            foreach (var message in messages)
-                        {
-                            //Потоковая передача сервера завершается, когда происходит выход из метода.
-                            await responseStream.WriteAsync(new HelloReply
-                            {
-                                Message = $"{message} {request.Name} {request.Value}"
-                            });
-                            // для имитации работы делаем задержку в 1 секунду
-                            await Task.Delay(TimeSpan.FromSeconds(1));
-                        }*/
-        //}
+            catch (Exception ex)
+            {
+                _logger.LogError($"Srever: {ex.Message}");
+            }
+        }
+        await readTask; // ожидаем завершения задачи чтения
     }
 }
