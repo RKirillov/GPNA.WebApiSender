@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf;
+using Grpc.Core;
 using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace GPNA.WebApiSender.Services;
@@ -17,18 +18,26 @@ public class ServerGreeterService : GreeterServerStream.GreeterServerStreamBase
     //ообщение от клиента в виде объекта request. 
     public override async Task SayHello1(HelloRequest request, IServerStreamWriter<HelloReply> responseStream, ServerCallContext context)
     {
-        while (true)
+        //CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        //CancellationToken token = cancellationTokenSource.Token;
+
+        try
         {
+            var i = 0;//имитация передачи тегов
+        while (!context.CancellationToken.IsCancellationRequested && i < 10)
+        {
+            i++;
             foreach (var message in messages)
             {
-                //Потоковая передача сервера завершается, когда происходит выход из метода.
-                await responseStream.WriteAsync(new HelloReply
-                {
-                    Message = $"{message} {request.Name} {request.Value}"
-                });
-                // для имитации работы делаем задержку в 1 секунду
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                await responseStream.WriteAsync(new HelloReply { Message = message });//, context.CancellationToken
+                    _logger.LogInformation(i.ToString());
+                await Task.Delay(TimeSpan.FromSeconds(1), context.CancellationToken);
             }
+        }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Srever: {ex.Message}");
         }
     }
 }
