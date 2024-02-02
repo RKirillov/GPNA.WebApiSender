@@ -32,8 +32,8 @@ namespace GPNA.WebApiSender
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
 
-            services.AddSingleton(messageConfiguration);
-            services.AddGrpc();//.AddJsonTranscoding();
+            //services.AddSingleton(messageConfiguration);
+            //services.AddGrpc();//.AddJsonTranscoding();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",

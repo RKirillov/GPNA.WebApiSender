@@ -11,10 +11,10 @@ namespace GPNA.WebApiSender.Services
         private readonly ILogger<ClientService> _logger;
         private readonly string _url;
 
-        public ClientService(ILogger<ClientService> logger, IConfiguration configuration, MessageConfiguration message)
+        public ClientService(ILogger<ClientService> logger, IConfiguration configuration)
         {
             _logger = logger;
-            _url = configuration[key: "Kestrel:Endpoints:gRPC:Url"] ?? string.Empty;
+            _url = configuration[key: "Kestrel:Endpoints:gRPC:Url"] ?? "http://localhost:5001";
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -31,7 +31,7 @@ namespace GPNA.WebApiSender.Services
             //_logger.LogInformation($"{channel.State}");
 
             // посылаем  сообщение HelloRequest серверу
-            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(800)).WithCancellationToken(stoppingToken));
+            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(80)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
@@ -42,15 +42,15 @@ namespace GPNA.WebApiSender.Services
                 {
                     //Для считывания данных из потока можно использовать разные стратегии. 
                     // здесь с помощью итераторов извлекаем каждое сообщение из потока
-                    var i = 0;
+                    //var i = 0;
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
                         _logger.LogInformation($"Server: {response.Items.Count()}");
-                       if (i == 14)
+/*                       if (i == 14)
                         {
                            await StopAsync(stoppingToken);
                         }
-                        i++;
+                        i++;*/
                     }
                     
                 }
@@ -62,6 +62,12 @@ namespace GPNA.WebApiSender.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+            }
+            finally 
+            {
+
+                await StopAsync(stoppingToken);
+                _logger.LogInformation("Client is stopped");
             }
         }
     }
