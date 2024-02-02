@@ -28,10 +28,10 @@ namespace GPNA.WebApiSender.Services
             var client = new GreeterServerStream.GreeterServerStreamClient(channel);
 
             // {IDLE, CONNECTING, READY!} 
-            _logger.LogInformation($"{channel.State}");
+            //_logger.LogInformation($"{channel.State}");
 
             // посылаем  сообщение HelloRequest серверу
-            var serverData = client.SayHello1(new HelloRequest(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(800)).WithCancellationToken(stoppingToken));
+            using  var serverData = client.SayHello1(new HelloRequest(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(800)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
@@ -46,7 +46,7 @@ namespace GPNA.WebApiSender.Services
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
                         _logger.LogInformation($"Server: {response.Message}");
-                       if (i == 2)
+                       if (i == 14)
                         {
                            await StopAsync(stoppingToken);
                         }
