@@ -18,8 +18,8 @@ namespace GPNA.WebApiSender.Services
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
+            //CancellationTokenSource source = new CancellationTokenSource();
+            //CancellationToken token = source.Token;
             //var token = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             // создаем канал для обмена сообщениями с сервером
             // параметр - адрес сервера gRPC
