@@ -2,7 +2,7 @@
 using GPNA.WebApiSender.Configuration;
 using Grpc.Core;
 using Grpc.Net.Client;
-using System.Threading;
+using GPNA.WebApiSender;
 
 namespace GPNA.WebApiSender.Services
 {
@@ -25,13 +25,13 @@ namespace GPNA.WebApiSender.Services
             // параметр - адрес сервера gRPC
             using var channel = GrpcChannel.ForAddress(_url);
             // создаем клиент
-            var client = new GreeterServerStream.GreeterServerStreamClient(channel);
+            var client = new GreeterGrpc.GreeterClient(channel);
 
             // {IDLE, CONNECTING, READY!} 
             //_logger.LogInformation($"{channel.State}");
 
             // посылаем  сообщение HelloRequest серверу
-            using  var serverData = client.SayHello1(new HelloRequest(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(800)).WithCancellationToken(stoppingToken));
+            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(800)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;

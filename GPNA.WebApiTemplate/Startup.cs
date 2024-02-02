@@ -86,7 +86,6 @@ namespace GPNA.WebApiSender
 
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client..."); });
                 //атем встраиваем сервис GreeterService в систему маршрутизации для обработки запроса:
-                endpoints.MapGrpcService<ServerGreeterService>();
                 endpoints.MapControllers();
             });
 
