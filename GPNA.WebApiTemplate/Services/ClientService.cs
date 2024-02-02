@@ -25,7 +25,7 @@ namespace GPNA.WebApiSender.Services
             // параметр - адрес сервера gRPC
             using var channel = GrpcChannel.ForAddress(_url);
             // создаем клиент
-            var client = new GreeterGrpc.GreeterClient(channel);
+            var client = new GreeterGrpc.GreeterGrpcClient(channel);
 
             // {IDLE, CONNECTING, READY!} 
             //_logger.LogInformation($"{channel.State}");
@@ -45,7 +45,7 @@ namespace GPNA.WebApiSender.Services
                     var i = 0;
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
-                        _logger.LogInformation($"Server: {response.Message}");
+                        _logger.LogInformation($"Server: {response.Items.Count()}");
                        if (i == 14)
                         {
                            await StopAsync(stoppingToken);
