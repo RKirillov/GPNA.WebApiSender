@@ -1,8 +1,8 @@
 ﻿
-using GPNA.WebApiSender.Configuration;
 using Grpc.Core;
 using Grpc.Net.Client;
-using GPNA.WebApiSender;
+using GPNA.Converters.TagValues;
+using System.Diagnostics;
 
 namespace GPNA.WebApiSender.Services
 {
@@ -10,6 +10,8 @@ namespace GPNA.WebApiSender.Services
     {
         private readonly ILogger<ClientService> _logger;
         private readonly string _url;
+        List<TagValueDouble> list = new List<TagValueDouble>();
+        private const int MS_IN_SECOND = 1000;
 
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration)
         {
@@ -23,35 +25,38 @@ namespace GPNA.WebApiSender.Services
             //var token = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             // создаем канал для обмена сообщениями с сервером
             // параметр - адрес сервера gRPC
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+
             using var channel = GrpcChannel.ForAddress(_url);
-            // создаем клиент
+            // создаем клиент   
             var client = new GreeterGrpc.GreeterGrpcClient(channel);
 
             // {IDLE, CONNECTING, READY!} 
             //_logger.LogInformation($"{channel.State}");
 
             // посылаем  сообщение HelloRequest серверу
-            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(8)).WithCancellationToken(stoppingToken));
+            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(100)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
-
+            var butchCounter = 0;
     
             try
             {
-                while (channel.State == ConnectivityState.Ready)
+                while (channel.State == ConnectivityState.Ready && butchCounter<100000)
                 {
                     //Для считывания данных из потока можно использовать разные стратегии. 
                     // здесь с помощью итераторов извлекаем каждое сообщение из потока
                     //var i = 0;
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
-                        _logger.LogInformation($"Server: {response.Items.Count()}");
-/*                       if (i == 14)
+                        butchCounter+= response.Items.Count();
+                        _logger.LogInformation($"Transfer count: {butchCounter}");
+/*                        foreach (var item in response.Items)
                         {
-                           await StopAsync(stoppingToken);
-                        }
-                        i++;*/
+                            _logger.LogInformation($"Item: {item.Tagname} {item.DateTime}");
+                        }*/
                     }
                     
                 }
@@ -68,7 +73,10 @@ namespace GPNA.WebApiSender.Services
             {
 
                 await StopAsync(stoppingToken);
+                stopwatch.Stop();
+                _logger.LogInformation($"Transfer speed: {butchCounter/((double)stopwatch.ElapsedMilliseconds / MS_IN_SECOND)} msg/sec.");
                 _logger.LogInformation("Client is stopped");
+
             }
         }
     }
