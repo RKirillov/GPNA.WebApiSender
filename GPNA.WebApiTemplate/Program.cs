@@ -1,6 +1,7 @@
 
 using NLog.Web;
 using GPNA.WebApiSender.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace GPNA.WebApiSender
 {
@@ -27,6 +28,11 @@ namespace GPNA.WebApiSender
                         .UseConfiguration(Configuration)
                         .UseStaticWebAssets()
                         .UseStartup<Startup>();
+/*                        .ConfigureKestrel(options =>
+                        {
+                            // Setup a HTTP/2 endpoint without TLS.
+                            options.ListenLocalhost(5000, o => o.Protocols = HttpProtocols.Http2);
+                        }); ;*/
       /*                  .ConfigureLogging(logging =>
                         {
                             logging.ClearProviders();

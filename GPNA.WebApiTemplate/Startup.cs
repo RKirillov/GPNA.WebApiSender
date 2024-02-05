@@ -3,6 +3,7 @@ using AutoMapper;
 using GPNA.Extensions.Configurations;
 using GPNA.WebApiSender.Configuration;
 using GPNA.WebApiSender.Services;
+using Grpc.Core;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -31,7 +32,14 @@ namespace GPNA.WebApiSender
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
-
+            services.AddGrpcClient<GreeterGrpc.GreeterGrpcClient>(o =>
+             {
+                 o.Address = new Uri("http://localhost:5000");
+             });
+   /*             .ConfigureChannel(o =>
+             {
+                 o.Credentials = ChannelCredentials.Insecure;
+             });*/
             //services.AddSingleton(messageConfiguration);
             //services.AddGrpc();//.AddJsonTranscoding();
             services.AddSwaggerGen(c =>
@@ -57,7 +65,7 @@ namespace GPNA.WebApiSender
                 c.IncludeXmlComments(filePath);
                 //c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
             });
-            // добавляем сервисы для работы с gRPC
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
