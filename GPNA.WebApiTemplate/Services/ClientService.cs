@@ -14,7 +14,7 @@ namespace GPNA.WebApiSender.Services
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration)
         {
             _logger = logger;
-            _url = configuration[key: "Kestrel:Endpoints:gRPC:Url"] ?? "http://localhost:5001";
+            _url = configuration[key: "Kestrel:Endpoints:gRPC:Url"] ?? "http://localhost:5000";
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -31,11 +31,12 @@ namespace GPNA.WebApiSender.Services
             //_logger.LogInformation($"{channel.State}");
 
             // посылаем  сообщение HelloRequest серверу
-            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(80)).WithCancellationToken(stoppingToken));
+            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(8)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
 
+    
             try
             {
                 while (channel.State == ConnectivityState.Ready)
