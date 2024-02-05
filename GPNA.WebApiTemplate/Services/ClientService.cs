@@ -10,7 +10,7 @@ namespace GPNA.WebApiSender.Services
     {
         private readonly ILogger<ClientService> _logger;
         private readonly string _url;
-        List<TagValueDouble> list = new List<TagValueDouble>();
+        List<TagValueDouble> list = new();
         private const int MS_IN_SECOND = 1000;
 
         public ClientService(ILogger<ClientService> logger, IConfiguration configuration)
