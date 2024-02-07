@@ -27,24 +27,24 @@ namespace GPNA.WebApiSender.Services
             // {IDLE, CONNECTING, READY!} 
             //_logger.LogInformation($"{channel.State}");
 
-            // посылаем  сообщение HelloRequest серверу
-            using  var serverData = _client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(100)).WithCancellationToken(stoppingToken));
+            // посылаем  пустое сообщение Request серверу
+            using var serverData = _client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(100)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
-            var butchCounter = 0;
+            var batchCounter = 0;
     
             try
             {
-                while (!stoppingToken.IsCancellationRequested && butchCounter<100000)
+                while (!stoppingToken.IsCancellationRequested && batchCounter<100000)
                 {
                     //Для считывания данных из потока можно использовать разные стратегии. 
                     // здесь с помощью итераторов извлекаем каждое сообщение из потока
                     //var i = 0;
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
-                        butchCounter+= response.Items.Count();
-                        _logger.LogInformation($"Transfer count: {butchCounter}");
+                        batchCounter+= response.Items.Count();
+                        _logger.LogInformation($"Transfer count: {batchCounter}");
 /*                        foreach (var item in response.Items)
                         {
                             _logger.LogInformation($"Item: {item.Tagname} {item.DateTime}");
@@ -66,7 +66,7 @@ namespace GPNA.WebApiSender.Services
 
                 await StopAsync(stoppingToken);
                 stopwatch.Stop();
-                _logger.LogInformation($"Transfer speed: {butchCounter/((double)stopwatch.ElapsedMilliseconds / MS_IN_SECOND)} msg/sec.");
+                _logger.LogInformation($"Transfer speed: {batchCounter/((double)stopwatch.ElapsedMilliseconds / MS_IN_SECOND)} msg/sec.");
                 _logger.LogInformation("Client is stopped");
 
             }

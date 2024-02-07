@@ -40,8 +40,7 @@ namespace GPNA.WebApiSender
              {
                  o.Credentials = ChannelCredentials.Insecure;
              });*/
-            //services.AddSingleton(messageConfiguration);
-            //services.AddGrpc();//.AddJsonTranscoding();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
@@ -93,7 +92,6 @@ namespace GPNA.WebApiSender
             {
 
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client..."); });
-                //атем встраиваем сервис GreeterService в систему маршрутизации для обработки запроса:
                 endpoints.MapControllers();
             });
 
