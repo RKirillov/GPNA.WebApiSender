@@ -35,8 +35,8 @@ namespace GPNA.WebApiSender.Services
             // {IDLE, CONNECTING, READY!} 
             //_logger.LogInformation($"{channel.State}");
 
-            // посылаем  сообщение HelloRequest серверу
-            using  var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(100)).WithCancellationToken(stoppingToken));
+            // посылаем пустое сообщение Request серверу
+            using var serverData = client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(100)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;

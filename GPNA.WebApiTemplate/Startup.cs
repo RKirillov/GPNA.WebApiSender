@@ -1,7 +1,6 @@
 
 using AutoMapper;
 using GPNA.Extensions.Configurations;
-using GPNA.WebApiSender.Configuration;
 using GPNA.WebApiSender.Services;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.OpenApi.Models;
@@ -27,7 +26,7 @@ namespace GPNA.WebApiSender
         {
             var config = new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
             services.AddSingleton(s => config.CreateMapper());
-            var messageConfiguration = _configuration.GetSection<MessageConfiguration>();
+            //var messageConfiguration = _configuration.GetSection<MessageConfiguration>();
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
@@ -57,7 +56,6 @@ namespace GPNA.WebApiSender
                 c.IncludeXmlComments(filePath);
                 //c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
             });
-            // добавляем сервисы для работы с gRPC
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,7 +83,6 @@ namespace GPNA.WebApiSender
             {
 
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client..."); });
-                //атем встраиваем сервис GreeterService в систему маршрутизации для обработки запроса:
                 endpoints.MapControllers();
             });
 
