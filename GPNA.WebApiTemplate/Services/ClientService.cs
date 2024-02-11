@@ -11,7 +11,7 @@ namespace GPNA.WebApiSender.Services
         private readonly ILogger<ClientService> _logger;
         private const int MS_IN_SECOND = 1000;
 
-        public ClientService(ILogger<ClientService> logger, GreeterGrpc.GreeterGrpcClient client, GrpcClientFactory grpcClientFactory)
+        public ClientService(ILogger<ClientService> logger, GreeterGrpc.GreeterGrpcClient client)
         {
             _logger = logger;
             //_client = grpcClientFactory.CreateClient<GreeterGrpc.GreeterGrpcClient>();

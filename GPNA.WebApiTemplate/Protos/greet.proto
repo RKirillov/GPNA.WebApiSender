@@ -37,6 +37,8 @@ message protoTagValueDouble {
          int32 OpcQuality = 5;
         //     Полное наименование тэга
          string Tagname = 6;
+        //     Значение
+         double Value =7;
 }
  
 //Запрос от клиента
