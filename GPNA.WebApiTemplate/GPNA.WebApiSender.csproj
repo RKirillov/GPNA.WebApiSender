@@ -19,9 +19,8 @@
     <PackageReference Include="Google.Protobuf" Version="3.22.1" />
     <PackageReference Include="GPNA.Converters" Version="1.0.32" />
     <PackageReference Include="GPNA.Extensions" Version="1.0.46" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.56.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.56.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.53.0">
+    <PackageReference Include="Grpc.Tools" Version="2.61.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
