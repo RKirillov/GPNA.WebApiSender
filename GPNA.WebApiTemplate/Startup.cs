@@ -5,6 +5,7 @@ using GPNA.WebApiSender.Configuration;
 using GPNA.WebApiSender.Services;
 using Grpc.Core;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -32,14 +33,34 @@ namespace GPNA.WebApiSender
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
+            //https://learn.microsoft.com/ru-ru/aspnet/core/grpc/performance?view=aspnetcore-5.0
+            var handler = new SocketsHttpHandler
+            {
+                PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+                KeepAlivePingDelay = TimeSpan.FromSeconds(10),
+                KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
+                EnableMultipleHttp2Connections = true
+            };
+
+            var loggerFactory = LoggerFactory.Create(logging =>
+            {
+                logging.AddConsole();
+                logging.SetMinimumLevel(LogLevel.Debug);
+            });
+
             services.AddGrpcClient<GreeterGrpc.GreeterGrpcClient>(o =>
              {
                  o.Address = new Uri("http://localhost:5000");
-             });
-   /*             .ConfigureChannel(o =>
+             }).ConfigureChannel(o =>
              {
-                 o.Credentials = ChannelCredentials.Insecure;
-             });*/
+                 o.HttpHandler = handler;
+                 o.LoggerFactory = loggerFactory;
+             }
+             );
+            /*             .ConfigureChannel(o =>
+                      {
+                          o.Credentials = ChannelCredentials.Insecure;
+                      });*/
 
             services.AddSwaggerGen(c =>
             {
@@ -64,7 +85,7 @@ namespace GPNA.WebApiSender
                 c.IncludeXmlComments(filePath);
                 //c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
             });
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,7 +98,7 @@ namespace GPNA.WebApiSender
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "GPNA.WebApiSender v1");
             }
-            ); 
+            );
 
             app.UseStaticFiles();
             app.UseProblemDetails();

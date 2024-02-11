@@ -11,8 +11,8 @@ import "google/protobuf/wrappers.proto";
 
 // определение сервиса -сервера  кто отвечает клиенту
 service GreeterGrpc {
-  // который получает сообщение HelloRequest
-  // и отправляет сообщение HelloReply
+  // который получает сообщение Request
+  // и отправляет сообщение Response
   //контракт на коммуникации
   rpc Transfer ( Request) returns (stream Response);
 }
