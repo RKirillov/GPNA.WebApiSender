@@ -45,7 +45,7 @@ namespace GPNA.WebApiSender.Services
                     //var i = 0;
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
-                        batchCounter+= response.Items.Count();
+                        batchCounter+= response.Items.Count;
                         _logger.LogInformation($"Transfer count: {batchCounter}");
 /*                        foreach (var item in response.Items)
                         {

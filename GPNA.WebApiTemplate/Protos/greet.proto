@@ -7,7 +7,7 @@ package greet;
 
 // импортируем нужные пакеты
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
+//import "google/protobuf/wrappers.proto";
 
 // определение сервиса -сервера  кто отвечает клиенту
 service GreeterGrpc {
