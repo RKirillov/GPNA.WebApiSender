@@ -12,17 +12,27 @@ namespace GPNA.WebApiSender.Services
         private readonly ILogger<ClientService> _logger;
         private readonly ConcurrentQueue<TagValueDouble?> _storage = new();
         private const int MS_IN_SECOND = 1000;
-
+        private const int BATCH_COUNT = 100000;
+        private const int DEADLINE_SEC = 100;
         public ClientService(ILogger<ClientService> logger, GreeterGrpc.GreeterGrpcClient client)
         {
             _logger = logger;
             _client = client;
         }
 
-        public TagValueDouble GetTagValueDouble()
+        public TagValueDouble? GetTag()
         {
             _storage.TryDequeue(out var parameter);
              return parameter;
+        }
+
+        public IEnumerable<TagValueDouble?> GetTags (int chunkSize)
+        {
+            for (int i = 0; i < chunkSize && !_storage.IsEmpty; i++)
+            {
+                _storage.TryDequeue(out var parameter);
+                yield return parameter;
+            }
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -38,7 +48,7 @@ namespace GPNA.WebApiSender.Services
             //_logger.LogInformation($"{channel.State}");
 
             // посылаем  пустое сообщение Request серверу
-            using var serverData = _client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(100)).WithCancellationToken(stoppingToken));
+            using var serverData = _client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(DEADLINE_SEC)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
@@ -46,7 +56,7 @@ namespace GPNA.WebApiSender.Services
     
             try
             {
-                while (!stoppingToken.IsCancellationRequested && batchCounter<100000)
+                while (!stoppingToken.IsCancellationRequested && batchCounter< BATCH_COUNT)
                 {
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
