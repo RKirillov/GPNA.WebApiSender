@@ -51,7 +51,7 @@ namespace GPNA.WebApiSender.Services
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
                         batchCounter+= response.Items.Count;
-                        _logger.LogInformation($"Transfer count: {batchCounter}");
+                        _logger.LogTrace($"Transfer count: {batchCounter}");
                         foreach (var protoItem in response.Items)
                         {
                             _storage.Enqueue(new TagValueDouble()
