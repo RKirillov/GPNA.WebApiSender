@@ -29,6 +29,7 @@ namespace GPNA.WebApiSender
         {
             var config = new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
             services.AddSingleton(s => config.CreateMapper());
+            services.AddSingleton<IClientService, ClientService>();
             var messageConfiguration = _configuration.GetSection<MessageConfiguration>();
 
             services.AddProblemDetails(ConfigureProblemDetails);

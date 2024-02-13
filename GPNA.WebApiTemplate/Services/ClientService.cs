@@ -1,22 +1,30 @@
 ﻿
+using GPNA.Converters.TagValues;
 using Grpc.Core;
-using Grpc.Net.ClientFactory;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace GPNA.WebApiSender.Services
 {
-    public class ClientService : BackgroundService
+    public class ClientService : BackgroundService, IClientService
     {
         private readonly GreeterGrpc.GreeterGrpcClient _client;
         private readonly ILogger<ClientService> _logger;
+        private readonly ConcurrentQueue<TagValueDouble?> _storage = new();
         private const int MS_IN_SECOND = 1000;
 
         public ClientService(ILogger<ClientService> logger, GreeterGrpc.GreeterGrpcClient client)
         {
             _logger = logger;
-            //_client = grpcClientFactory.CreateClient<GreeterGrpc.GreeterGrpcClient>();
             _client = client;
         }
+
+        public TagValueDouble GetTagValueDouble()
+        {
+            _storage.TryDequeue(out var parameter);
+             return parameter;
+        }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
 
@@ -40,17 +48,23 @@ namespace GPNA.WebApiSender.Services
             {
                 while (!stoppingToken.IsCancellationRequested && batchCounter<100000)
                 {
-                    //Для считывания данных из потока можно использовать разные стратегии. 
-                    // здесь с помощью итераторов извлекаем каждое сообщение из потока
-                    //var i = 0;
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
                         batchCounter+= response.Items.Count;
                         _logger.LogInformation($"Transfer count: {batchCounter}");
-/*                        foreach (var item in response.Items)
+                        foreach (var protoItem in response.Items)
                         {
-                            _logger.LogInformation($"Item: {item.Tagname} {item.DateTime}");
-                        }*/
+                            _storage.Enqueue(new TagValueDouble()
+                            {
+                                TagId = protoItem.TagId,
+                                DateTime = protoItem.DateTime.ToDateTime(),
+                                DateTimeUtc = protoItem.DateTimeUtc.ToDateTime(),
+                                TimeStampUtc = protoItem.TimeStampUtc.ToDateTime(),
+                                OpcQuality = protoItem.OpcQuality,
+                                Tagname = protoItem.Tagname,
+                                Value = protoItem.Value 
+                            });
+                        }
                     }
                     
                 }
