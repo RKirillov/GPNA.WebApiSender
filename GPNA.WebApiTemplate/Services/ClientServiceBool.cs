@@ -6,27 +6,27 @@ using System.Diagnostics;
 
 namespace GPNA.WebApiSender.Services
 {
-    public class ClientService : BackgroundService, IClientService
+    public class ClientServiceBool: BackgroundService, IClientServiceBool
     {
-        private readonly GreeterGrpc.GreeterGrpcClient _client;
-        private readonly ILogger<ClientService> _logger;
-        private readonly ConcurrentQueue<TagValueDouble?> _storage = new();
+        private readonly GreeterGrpcBool.GreeterGrpcBoolClient _client;
+        private readonly ILogger<ClientServiceBool> _logger;
+        private readonly ConcurrentQueue<TagValueBool?> _storage = new();
         private const int MS_IN_SECOND = 1000;
         private const int BATCH_COUNT = 100000;
         private const int DEADLINE_SEC = 100;
-        public ClientService(ILogger<ClientService> logger, GreeterGrpc.GreeterGrpcClient client)
+        public ClientServiceBool(ILogger<ClientServiceBool> logger, GreeterGrpcBool.GreeterGrpcBoolClient client)
         {
             _logger = logger;
             _client = client;
         }
 
-        public TagValueDouble? GetTag()
+        public TagValueBool? GetTag()
         {
             _storage.TryDequeue(out var parameter);
              return parameter;
         }
 
-        public IEnumerable<TagValueDouble?> GetTags (int chunkSize)
+        public IEnumerable<TagValueBool?> GetTags (int chunkSize)
         {
             for (int i = 0; i < chunkSize && !_storage.IsEmpty; i++)
             {
@@ -48,7 +48,7 @@ namespace GPNA.WebApiSender.Services
             //_logger.LogInformation($"{channel.State}");
 
             // посылаем  пустое сообщение Request серверу
-            using var serverData = _client.Transfer(new Request(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(DEADLINE_SEC)).WithCancellationToken(stoppingToken));
+            using var serverData = _client.TransferBool(new RequestBool(), new CallOptions().WithWaitForReady(true).WithDeadline(DateTime.UtcNow.AddSeconds(DEADLINE_SEC)).WithCancellationToken(stoppingToken));
 
             // получаем поток сервера
             var responseStream = serverData.ResponseStream;
@@ -61,10 +61,10 @@ namespace GPNA.WebApiSender.Services
                     await foreach (var response in serverData.ResponseStream.ReadAllAsync(stoppingToken))
                     {
                         batchCounter+= response.Items.Count;
-                        _logger.LogTrace($"Transfer count: {batchCounter}");
+                        _logger.LogTrace($"Bool transfer count: {batchCounter}");
                         foreach (var protoItem in response.Items)
                         {
-                            _storage.Enqueue(new TagValueDouble()
+                            _storage.Enqueue(new TagValueBool()
                             {
                                 TagId = protoItem.TagId,
                                 DateTime = protoItem.DateTime.ToDateTime(),
@@ -92,7 +92,7 @@ namespace GPNA.WebApiSender.Services
 
                 await StopAsync(stoppingToken);
                 stopwatch.Stop();
-                _logger.LogInformation($"Transfer speed: {batchCounter/((double)stopwatch.ElapsedMilliseconds / MS_IN_SECOND)} msg/sec.");
+                _logger.LogInformation($"Bool transfer speed: {batchCounter/((double)stopwatch.ElapsedMilliseconds / MS_IN_SECOND)} msg/sec.");
                 _logger.LogInformation("Client is stopped");
 
             }

@@ -28,13 +28,16 @@ namespace GPNA.WebApiSender
         public void ConfigureServices(IServiceCollection services)
         {
             var config = new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
+            var clientConfiguration = _configuration.GetSection<ClientConfiguration>();
             services.AddSingleton(s => config.CreateMapper());
-            services.AddSingleton<IClientService, ClientService>();
-            var messageConfiguration = _configuration.GetSection<MessageConfiguration>();
+            services.AddSingleton(s => config.CreateMapper());
+            
+            services.AddSingleton<IClientServiceDouble, ClientServiceDouble>();
+            services.AddSingleton(clientConfiguration);
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
-            //https://learn.microsoft.com/ru-ru/aspnet/core/grpc/performance?view=aspnetcore-5.0
+
             var handler = new SocketsHttpHandler
             {
                 PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
@@ -43,13 +46,14 @@ namespace GPNA.WebApiSender
                 EnableMultipleHttp2Connections = true
             };
 
+
             var loggerFactory = LoggerFactory.Create(logging =>
             {
                 logging.AddConsole();
                 logging.SetMinimumLevel(LogLevel.Debug);
             });
 
-            services.AddGrpcClient<GreeterGrpc.GreeterGrpcClient>(o =>
+            services.AddGrpcClient<GreeterGrpcDouble.GreeterGrpcDoubleClient>(o =>
              {
                  o.Address = new Uri("http://localhost:5000");
              }).ConfigureChannel(o =>
@@ -62,7 +66,15 @@ namespace GPNA.WebApiSender
                       {
                           o.Credentials = ChannelCredentials.Insecure;
                       });*/
-
+            services.AddGrpcClient<GreeterGrpcBool.GreeterGrpcBoolClient>(o =>
+            {
+                o.Address = new Uri("http://localhost:5000");
+            }).ConfigureChannel(o =>
+            {
+                o.HttpHandler = handler;
+                o.LoggerFactory = loggerFactory;
+            }
+ );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",

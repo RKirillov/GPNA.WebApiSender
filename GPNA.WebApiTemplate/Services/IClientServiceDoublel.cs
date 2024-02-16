@@ -2,7 +2,7 @@
 
 namespace GPNA.WebApiSender.Services
 {
-    public interface IClientService
+    public interface IClientServiceDouble
     {
         public TagValueDouble? GetTag();
 

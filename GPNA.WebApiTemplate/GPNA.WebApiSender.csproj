@@ -36,7 +36,8 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="ModelDto\" />
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\greetTagValueDouble.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\greetTagValueBool.proto" GrpcServices="Client" />
   </ItemGroup>
 
   <ItemGroup>

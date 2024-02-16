@@ -42,7 +42,8 @@ namespace GPNA.WebApiSender
                 })
                 .ConfigureServices(svc =>
                 {
-                    svc.AddHostedService<ClientService>();
+                    svc.AddHostedService<ClientServiceDouble>();
+                    svc.AddHostedService<ClientServiceBool>();
                 });
     }
 }
