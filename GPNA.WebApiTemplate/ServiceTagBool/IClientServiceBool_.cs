@@ -1,7 +1,7 @@
 ﻿using GPNA.Converters.TagValues;
 using System.Collections.Generic;
 
-namespace GPNA.WebApiSender.ServiceTagBool
+namespace GPNA.gRPCClient.ServiceTagBool
 {
     public interface IClientServiceBool_
     {

@@ -1,4 +1,4 @@
-﻿namespace GPNA.WebApiSender.Configuration
+﻿namespace GPNA.gRPCClient.Configuration
 {
     #region Using
     using System;

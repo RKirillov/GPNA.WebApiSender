@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GPNA.WebApiSender.Configuration
+namespace GPNA.gRPCClient.Configuration
 {
     public class ClientConfiguration
     {

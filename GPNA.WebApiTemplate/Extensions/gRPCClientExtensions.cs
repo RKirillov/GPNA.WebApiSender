@@ -1,18 +1,10 @@
-﻿using GPNA.WebApiSender.ServiceTagBool;
-using GPNA.WebApiSender.ServiceTagDouble;
+﻿using GPNA.gRPCClient.ServiceTagBool;
+using GPNA.gRPCClient.ServiceTagDouble;
 using gRPCClient;
 using gRPCClient.Configuration;
-using gRPCClient.ServiceTagBool;
-using gRPCClient.ServiceTagDouble;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Net.Http;
-using System.Threading;
 
-namespace GPNA.WebApiSender.Extensions
+namespace GPNA.gRPCClient.Extensions
 {
     public static class gRPCClientExtensions
     {

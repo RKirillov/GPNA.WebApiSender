@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 
 
-namespace GPNA.WebApiSender.ServiceTagDouble
+namespace GPNA.gRPCClient.ServiceTagDouble
 {
     public class ClientServiceDouble_ : BackgroundService, IClientServiceDouble_
     {

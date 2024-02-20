@@ -8,7 +8,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "GPNA.WebApiSender": {
+    "GPNA.gRPCClient": {
       "commandName": "Project",
       "launchUrl": "swagger",
       "launchBrowser": false,

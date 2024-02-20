@@ -6,16 +6,16 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["GPNA.WebApiTemplate/GPNA.WebApiSender.csproj", "GPNA.WebApiTemplate/"]
-RUN dotnet restore "GPNA.WebApiTemplate/GPNA.WebApiSender.csproj"
+COPY ["GPNA.WebApiTemplate/GPNA.gRPCClient.csproj", "GPNA.WebApiTemplate/"]
+RUN dotnet restore "GPNA.WebApiTemplate/GPNA.gRPCClient.csproj"
 COPY . .
 WORKDIR "/src/GPNA.WebApiTemplate"
-RUN dotnet build "GPNA.WebApiSender.csproj" -c Release -o /app/build
+RUN dotnet build "GPNA.gRPCClient.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "GPNA.WebApiSender.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "GPNA.gRPCClient.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "GPNA.WebApiSender.dll"]
+ENTRYPOINT ["dotnet", "GPNA.gRPCClient.dll"]

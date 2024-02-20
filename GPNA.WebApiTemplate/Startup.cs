@@ -6,7 +6,7 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
-namespace GPNA.WebApiSender
+namespace GPNA.gRPCClient
 {
     public class Startup
     {
@@ -80,7 +80,7 @@ namespace GPNA.WebApiSender
                 c.SwaggerDoc("v1",
                     new OpenApiInfo
                     {
-                        Title = "GPNA.WebApiSender",
+                        Title = "GPNA.gRPCClient",
                         Version = "v1.0",
                         Contact = new OpenApiContact
                         {
@@ -94,7 +94,7 @@ namespace GPNA.WebApiSender
                         }
                     });
 
-                var filePath = Path.Combine(AppContext.BaseDirectory, "GPNA.WebApiSender.xml");
+                var filePath = Path.Combine(AppContext.BaseDirectory, "GPNA.gRPCClient.xml");
                 c.IncludeXmlComments(filePath);
                 //c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
             });
@@ -116,7 +116,7 @@ namespace GPNA.WebApiSender
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "GPNA.WebApiSender v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "GPNA.gRPCClient v1");
             }
             );
 

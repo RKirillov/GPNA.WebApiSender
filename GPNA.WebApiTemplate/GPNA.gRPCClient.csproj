@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="GPNA.WebApiSender.xml">
+    <None Update="GPNA.gRPCClient.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

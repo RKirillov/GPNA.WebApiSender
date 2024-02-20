@@ -1,7 +1,7 @@
 ﻿using GPNA.Converters.TagValues;
 using System.Collections.Generic;
 
-namespace GPNA.WebApiSender.ServiceTagDouble
+namespace GPNA.gRPCClient.ServiceTagDouble
 {
     public interface IClientServiceDouble_
     {
