@@ -1,13 +1,8 @@
 
 using AutoMapper;
-using GPNA.Extensions.Configurations;
-using GPNA.WebApiSender.Configuration;
-using Grpc.Core;
 using gRPCClient.Configuration;
 using gRPCClient.Extensions;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -37,66 +32,49 @@ namespace GPNA.WebApiSender
             //services.AddSingleton(clientConfiguration);
             //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
             //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
-            //var _clientConfiguration = new gRPCClientConfiguration(22, 22, true);
-            //services.TryAddSingleton(_clientConfiguration);
+
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
-            services.gRPCConfigureDouble(new HttpClientConfiguration
-            {
-                KeepAlivePingDelay = 10,
-                KeepAlivePingTimeout = 10,
-                PortNumber = 5000,
-                EnableMultipleHttp2Connections = true
-            },
-            new gRPCClientConfiguration(100000, 60, true)
+            services.gRPCConfigureDouble(
+                new HttpClientConfiguration
+                {
+                    KeepAlivePingDelay = 10,
+                    KeepAlivePingTimeout = 10,
+                    PortNumber = 5000,
+                    EnableMultipleHttp2Connections = true
+                },
+                new gRPCClientConfiguration
+                {
+                    BatchCount = 10000,
+                    DeadLineSec = 60,
+                    WithWaitForReady = true
+                }
             );
-/*            services.gRPCConfigureBool(new HttpClientConfiguration
+
+            services.gRPCConfigureBool(
+                new HttpClientConfiguration
+                {
+                    KeepAlivePingDelay = 10,
+                    KeepAlivePingTimeout = 10,
+                    PortNumber = 5000,
+                    EnableMultipleHttp2Connections = true
+                },
+                new gRPCClientConfiguration
+                {
+                    BatchCount = 10000,
+                    DeadLineSec = 60,
+                    WithWaitForReady = true
+                }
+            );
+            var handler = new SocketsHttpHandler
             {
-                KeepAlivePingDelay = 10,
-                KeepAlivePingTimeout = 10,
-                PortNumber = 5000,
+                PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+                KeepAlivePingDelay = TimeSpan.FromSeconds(10),
+                KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
                 EnableMultipleHttp2Connections = true
-            },
-            new gRPCClientConfiguration(100000, 60, true)
-            );*/
-            /*            var handler = new SocketsHttpHandler
-                        {
-                            PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
-                            KeepAlivePingDelay = TimeSpan.FromSeconds(10),
-                            KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
-                            EnableMultipleHttp2Connections = true
-                        };*/
+            };
 
-
-            /*var loggerFactory = LoggerFactory.Create(logging =>
-            {
-                logging.AddConsole();
-                logging.SetMinimumLevel(LogLevel.Debug);
-            });
-
-            services.AddGrpcClient<GreeterGrpcDouble.GreeterGrpcDoubleClient>(o =>
-             {
-                 o.Address = new Uri("http://localhost:5000");
-             }).ConfigureChannel(o =>
-             {
-                 o.HttpHandler = handler;
-                 o.LoggerFactory = loggerFactory;
-             }
-             );
-            *//*             .ConfigureChannel(o =>
-                      {
-                          o.Credentials = ChannelCredentials.Insecure;
-                      });*//*
-            services.AddGrpcClient<GreeterGrpcBool.GreeterGrpcBoolClient>(o =>
-            {
-                o.Address = new Uri("http://localhost:5000");
-            }).ConfigureChannel(o =>
-            {
-                o.HttpHandler = handler;
-                o.LoggerFactory = loggerFactory;
-            }*/
-            //);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
@@ -126,8 +104,15 @@ namespace GPNA.WebApiSender
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
 
-            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

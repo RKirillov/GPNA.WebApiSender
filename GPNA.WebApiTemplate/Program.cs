@@ -1,6 +1,5 @@
 
 using NLog.Web;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using gRPCClient.Extensions;
 
 namespace GPNA.WebApiSender
@@ -27,25 +26,25 @@ namespace GPNA.WebApiSender
                     webBuilder.UseKestrel()
                         .UseConfiguration(Configuration)
                         .UseStaticWebAssets()
-                        .UseStartup<Startup>();
+                        .UseStartup<Startup>()
                     /*                        .ConfigureKestrel(options =>
                                             {
                                                 // Setup a HTTP/2 endpoint without TLS.
                                                 options.ListenLocalhost(5000, o => o.Protocols = HttpProtocols.Http2);
                                             }); ;*/
-                    /*                  .ConfigureLogging(logging =>
+                                      .ConfigureLogging(logging =>
                                       {
                                           logging.ClearProviders();
-                                          logging.SetMinimumLevel(LogLevel.Information);
+                                          logging.SetMinimumLevel(LogLevel.Trace);
                                       })
-                                      .UseNLog();*/
+                                      .UseNLog();
                 })
                       /*                .ConfigureServices(svc =>
                                       {
                                           svc.AddHostedService<gRPCClient.ServiceTagDouble.ClientServiceDouble>();
                                           svc.AddHostedService<gRPCClient.ServiceTagBool.ClientServiceBool>();
                                       });*/
-                      //.gRPCHostBuilderBool();
+                      .gRPCHostBuilderBool()
                       .gRPCHostBuilderDouble();
     }
 }
