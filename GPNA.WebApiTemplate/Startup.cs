@@ -30,12 +30,11 @@ namespace GPNA.WebApiSender
         public void ConfigureServices(IServiceCollection services)
         {
             var config = new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
-            var clientConfiguration = _configuration.GetSection<ClientConfiguration>();
-            services.AddSingleton(s => config.CreateMapper());
+            //var clientConfiguration = _configuration.GetSection<ClientConfiguration>();
             services.AddSingleton(s => config.CreateMapper());
 
             //services.AddSingleton<gRPCClient.ServiceTagDouble.IClientServiceDouble, gRPCClient.ServiceTagDouble.ClientServiceDouble>();
-            services.AddSingleton(clientConfiguration);
+            //services.AddSingleton(clientConfiguration);
             //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
             //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
             //var _clientConfiguration = new gRPCClientConfiguration(22, 22, true);
