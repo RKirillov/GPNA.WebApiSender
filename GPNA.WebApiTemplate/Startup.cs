@@ -2,8 +2,8 @@
 using AutoMapper;
 using GPNA.Extensions.Configurations;
 using GPNA.WebApiSender.Configuration;
-using GPNA.WebApiSender.Services;
 using Grpc.Core;
+using gRPCClient.Extensions;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -32,22 +32,35 @@ namespace GPNA.WebApiSender
             services.AddSingleton(s => config.CreateMapper());
             services.AddSingleton(s => config.CreateMapper());
             
-            services.AddSingleton<IClientServiceDouble, ClientServiceDouble>();
+            //services.AddSingleton<gRPCClient.ServiceTagDouble.IClientServiceDouble, gRPCClient.ServiceTagDouble.ClientServiceDouble>();
             services.AddSingleton(clientConfiguration);
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
-
-            var handler = new SocketsHttpHandler
+            services.gRPCConfigureDouble(new gRPCClient.Configuration.HttpClientConfiguration 
+            {
+                KeepAlivePingDelay  =10,
+                KeepAlivePingTimeout=10,
+                PortNumber= 5000,
+                EnableMultipleHttp2Connections=true
+            });
+            services.gRPCConfigureBool(new gRPCClient.Configuration.HttpClientConfiguration
+            {
+                KeepAlivePingDelay   =10,
+                KeepAlivePingTimeout =10,
+                PortNumber =5000,
+                EnableMultipleHttp2Connections = true
+            });
+/*            var handler = new SocketsHttpHandler
             {
                 PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
                 KeepAlivePingDelay = TimeSpan.FromSeconds(10),
                 KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
                 EnableMultipleHttp2Connections = true
-            };
+            };*/
 
 
-            var loggerFactory = LoggerFactory.Create(logging =>
+            /*var loggerFactory = LoggerFactory.Create(logging =>
             {
                 logging.AddConsole();
                 logging.SetMinimumLevel(LogLevel.Debug);
@@ -62,10 +75,10 @@ namespace GPNA.WebApiSender
                  o.LoggerFactory = loggerFactory;
              }
              );
-            /*             .ConfigureChannel(o =>
+            *//*             .ConfigureChannel(o =>
                       {
                           o.Credentials = ChannelCredentials.Insecure;
-                      });*/
+                      });*//*
             services.AddGrpcClient<GreeterGrpcBool.GreeterGrpcBoolClient>(o =>
             {
                 o.Address = new Uri("http://localhost:5000");
@@ -73,8 +86,8 @@ namespace GPNA.WebApiSender
             {
                 o.HttpHandler = handler;
                 o.LoggerFactory = loggerFactory;
-            }
- );
+            }*/
+ //);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",

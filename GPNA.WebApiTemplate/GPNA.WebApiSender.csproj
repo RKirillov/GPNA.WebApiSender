@@ -24,6 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="gRPCClient" Version="1.0.5" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="5.0.17" />
@@ -36,8 +37,8 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="ModelDto\" />
-    <Protobuf Include="Protos\greetTagValueDouble.proto" GrpcServices="Client" />
-    <Protobuf Include="Protos\greetTagValueBool.proto" GrpcServices="Client" />
+    <Folder Include="Protos\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

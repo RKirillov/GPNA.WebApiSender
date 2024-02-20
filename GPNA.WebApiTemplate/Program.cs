@@ -1,6 +1,5 @@
 
 using NLog.Web;
-using GPNA.WebApiSender.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace GPNA.WebApiSender
@@ -42,8 +41,8 @@ namespace GPNA.WebApiSender
                 })
                 .ConfigureServices(svc =>
                 {
-                    svc.AddHostedService<ClientServiceDouble>();
-                    svc.AddHostedService<ClientServiceBool>();
+                    svc.AddHostedService<gRPCClient.ServiceTagDouble.ClientServiceDouble>();
+                    svc.AddHostedService<gRPCClient.ServiceTagLive.ClientServiceBool>();
                 });
     }
 }
