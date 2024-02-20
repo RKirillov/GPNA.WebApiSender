@@ -42,7 +42,9 @@ namespace GPNA.WebApiSender
                 .ConfigureServices(svc =>
                 {
                     svc.AddHostedService<gRPCClient.ServiceTagDouble.ClientServiceDouble>();
-                    svc.AddHostedService<gRPCClient.ServiceTagLive.ClientServiceBool>();
+                    svc.AddHostedService<gRPCClient.ServiceTagBool.ClientServiceBool>();
                 });
+/*                      .gRPCHostBuilderBool()
+                      .gRPCHostBuilderDouble();*/
     }
 }

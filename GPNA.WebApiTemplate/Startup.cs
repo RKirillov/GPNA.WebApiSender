@@ -3,8 +3,10 @@ using AutoMapper;
 using GPNA.Extensions.Configurations;
 using GPNA.WebApiSender.Configuration;
 using Grpc.Core;
+using gRPCClient.Configuration;
 using gRPCClient.Extensions;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -31,33 +33,41 @@ namespace GPNA.WebApiSender
             var clientConfiguration = _configuration.GetSection<ClientConfiguration>();
             services.AddSingleton(s => config.CreateMapper());
             services.AddSingleton(s => config.CreateMapper());
-            
+
             //services.AddSingleton<gRPCClient.ServiceTagDouble.IClientServiceDouble, gRPCClient.ServiceTagDouble.ClientServiceDouble>();
             services.AddSingleton(clientConfiguration);
+            //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
+            //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
+            //var _clientConfiguration = new gRPCClientConfiguration(22, 22, true);
+            //services.TryAddSingleton(_clientConfiguration);
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
-            services.gRPCConfigureDouble(new gRPCClient.Configuration.HttpClientConfiguration 
+            services.gRPCConfigureDouble(new HttpClientConfiguration
             {
-                KeepAlivePingDelay  =10,
-                KeepAlivePingTimeout=10,
-                PortNumber= 5000,
-                EnableMultipleHttp2Connections=true
-            });
-            services.gRPCConfigureBool(new gRPCClient.Configuration.HttpClientConfiguration
-            {
-                KeepAlivePingDelay   =10,
-                KeepAlivePingTimeout =10,
-                PortNumber =5000,
+                KeepAlivePingDelay = 10,
+                KeepAlivePingTimeout = 10,
+                PortNumber = 5000,
                 EnableMultipleHttp2Connections = true
-            });
-/*            var handler = new SocketsHttpHandler
+            },
+            new gRPCClientConfiguration(100000, 60, true)
+            );
+            services.gRPCConfigureBool(new HttpClientConfiguration
             {
-                PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
-                KeepAlivePingDelay = TimeSpan.FromSeconds(10),
-                KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
+                KeepAlivePingDelay = 10,
+                KeepAlivePingTimeout = 10,
+                PortNumber = 5000,
                 EnableMultipleHttp2Connections = true
-            };*/
+            },
+            new gRPCClientConfiguration(100000, 60, true)
+            );
+            /*            var handler = new SocketsHttpHandler
+                        {
+                            PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+                            KeepAlivePingDelay = TimeSpan.FromSeconds(10),
+                            KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
+                            EnableMultipleHttp2Connections = true
+                        };*/
 
 
             /*var loggerFactory = LoggerFactory.Create(logging =>
@@ -87,7 +97,7 @@ namespace GPNA.WebApiSender
                 o.HttpHandler = handler;
                 o.LoggerFactory = loggerFactory;
             }*/
- //);
+            //);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
