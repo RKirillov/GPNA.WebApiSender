@@ -52,7 +52,7 @@ namespace GPNA.WebApiSender
             },
             new gRPCClientConfiguration(100000, 60, true)
             );
-            services.gRPCConfigureBool(new HttpClientConfiguration
+/*            services.gRPCConfigureBool(new HttpClientConfiguration
             {
                 KeepAlivePingDelay = 10,
                 KeepAlivePingTimeout = 10,
@@ -60,7 +60,7 @@ namespace GPNA.WebApiSender
                 EnableMultipleHttp2Connections = true
             },
             new gRPCClientConfiguration(100000, 60, true)
-            );
+            );*/
             /*            var handler = new SocketsHttpHandler
                         {
                             PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
