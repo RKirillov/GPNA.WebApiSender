@@ -28,11 +28,7 @@ namespace GPNA.gRPCClient
             //var clientConfiguration = _configuration.GetSection<ClientConfiguration>();
             services.AddSingleton(s => config.CreateMapper());
 
-            //services.AddSingleton<gRPCClient.ServiceTagDouble.IClientServiceDouble, gRPCClient.ServiceTagDouble.ClientServiceDouble>();
             //services.AddSingleton(clientConfiguration);
-            //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
-            //services.AddSingleton<gRPCClient.Configuration.gRPCClientConfiguration>();
-
 
             services.AddProblemDetails(ConfigureProblemDetails);
             services.AddControllers();
@@ -67,13 +63,6 @@ namespace GPNA.gRPCClient
                     WithWaitForReady = true
                 }
             );
-            var handler = new SocketsHttpHandler
-            {
-                PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
-                KeepAlivePingDelay = TimeSpan.FromSeconds(10),
-                KeepAlivePingTimeout = TimeSpan.FromSeconds(10),
-                EnableMultipleHttp2Connections = true
-            };
 
             services.AddSwaggerGen(c =>
             {

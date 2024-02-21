@@ -27,23 +27,23 @@ namespace GPNA.gRPCClient
                         .UseConfiguration(Configuration)
                         .UseStaticWebAssets()
                         .UseStartup<Startup>()
-                    /*                        .ConfigureKestrel(options =>
-                                            {
-                                                // Setup a HTTP/2 endpoint without TLS.
-                                                options.ListenLocalhost(5000, o => o.Protocols = HttpProtocols.Http2);
-                                            }); ;*/
-                                      .ConfigureLogging(logging =>
-                                      {
-                                          logging.ClearProviders();
-                                          logging.SetMinimumLevel(LogLevel.Trace);
-                                      })
-                                      .UseNLog();
+/*                        .ConfigureKestrel(options =>
+                        {
+                            // Setup a HTTP/2 endpoint without TLS.
+                            options.ListenLocalhost(5000, o => o.Protocols = HttpProtocols.Http2);
+                        }); ;*/
+                        .ConfigureLogging(logging =>
+                        {
+                            logging.ClearProviders();
+                            logging.SetMinimumLevel(LogLevel.Trace);
+                        })
+                        .UseNLog();
                 })
-                      /*                .ConfigureServices(svc =>
-                                      {
-                                          svc.AddHostedService<gRPCClient.ServiceTagDouble.ClientServiceDouble>();
-                                          svc.AddHostedService<gRPCClient.ServiceTagBool.ClientServiceBool>();
-                                      });*/
+        /*                .ConfigureServices(svc =>
+                        {
+                            svc.AddHostedService<gRPCClient.ServiceTagDouble.ClientServiceDouble>();
+                            svc.AddHostedService<gRPCClient.ServiceTagBool.ClientServiceBool>();
+                        });*/
                       .gRPCHostBuilderBool()
                       .gRPCHostBuilderDouble();
     }
