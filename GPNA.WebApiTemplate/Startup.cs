@@ -120,8 +120,7 @@ namespace GPNA.gRPCClient
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
-
-                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client..."); });
+                //endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client..."); });
                 endpoints.MapControllers();
             });
 
