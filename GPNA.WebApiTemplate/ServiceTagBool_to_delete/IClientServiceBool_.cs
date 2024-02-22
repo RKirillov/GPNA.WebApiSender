@@ -1,7 +1,7 @@
 ﻿using GPNA.Converters.TagValues;
 using System.Collections.Generic;
 
-namespace GPNA.gRPCClient.ServiceTagBool
+namespace GPNA.gRPCClient.ServiceTagBool_to_delete
 {
     public interface IClientServiceBool_
     {

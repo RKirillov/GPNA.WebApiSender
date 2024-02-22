@@ -1,10 +1,10 @@
-﻿using GPNA.gRPCClient.ServiceTagBool;
-using GPNA.gRPCClient.ServiceTagDouble;
+﻿using GPNA.gRPCClient.ServiceTagBool_to_delete;
+using GPNA.gRPCClient.ServiceTagDouble_to_delete;
 using gRPCClient;
 using gRPCClient.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace GPNA.gRPCClient.Extensions
+namespace GPNA.gRPCClient.Extensions_to_delete
 {
     public static class gRPCClientExtensions
     {
